@@ -127,10 +127,12 @@ class RoomManager(
         }
     }
 
-    fun newRemoteVideoTrack(remoteParticipant: RemoteParticipant) {
+    fun newRemoteVideoTrack(remoteParticipant: RemoteParticipant, trackName: String) {
         Timber.i("RemoteParticipant video track published connected -> remoteParticipant: %s",
                 remoteParticipant.sid)
-        mutableViewEvents.value = NewRemoteVideoTrack(remoteParticipant = remoteParticipant)
+        mutableViewEvents.value = NewRemoteVideoTrack(
+                remoteParticipant = remoteParticipant,
+                trackName = trackName)
     }
 
     private fun handleTokenException(e: Exception, error: AuthServiceError? = null) {

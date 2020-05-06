@@ -87,7 +87,8 @@ class RoomViewModel(
                 }
             }
             is NewRemoteVideoTrack -> {
-                participantManager.updateParticipants(roomEvent.remoteParticipant)
+                participantManager.updateParticipants(roomEvent.remoteParticipant,
+                        roomEvent.trackName)
                 updateState { it.copy(participantThumbnails = participantManager.participants) }
             }
         }

@@ -125,8 +125,8 @@ public class RoomActivity extends BaseActivity {
     private static final int MEDIA_PROJECTION_REQUEST_CODE = 101;
     private static final int STATS_DELAY = 1000; // milliseconds
     private static final String MICROPHONE_TRACK_NAME = "microphone";
-    private static final String CAMERA_TRACK_NAME = "camera";
-    private static final String SCREEN_TRACK_NAME = "screen";
+    public static final String CAMERA_TRACK_NAME = "camera";
+    public static final String SCREEN_TRACK_NAME = "screen";
     private static final String IS_AUDIO_MUTED = "IS_AUDIO_MUTED";
     private static final String IS_VIDEO_MUTED = "IS_VIDEO_MUTED";
 
@@ -870,7 +870,8 @@ public class RoomActivity extends BaseActivity {
             if (participantController.getPrimaryItem().sid.equals(localParticipantSid)) {
                 participantController.updatePrimaryThumb(mirror);
             } else {
-                participantController.updateThumb(localParticipantSid, cameraVideoTrack, mirror);
+                //                participantController.updateThumb(localParticipantSid,
+                // cameraVideoTrack, mirror);
             }
         }
     }
@@ -974,15 +975,17 @@ public class RoomActivity extends BaseActivity {
                                 ? ParticipantView.State.NO_VIDEO
                                 : ParticipantView.State.VIDEO;
                 participantController.updateThumb(old.sid, old.videoTrack, state);
-                participantController.updateThumb(old.sid, old.videoTrack, old.mirror);
+                //                participantController.updateThumb(old.sid, old.videoTrack,
+                // old.mirror);
 
             } else {
 
                 // add thumb for remote participant
                 RemoteParticipant remoteParticipant = getRemoteParticipant(old);
                 if (remoteParticipant != null) {
-                    participantController.addThumb(
-                            old.sid, old.identity, old.videoTrack, old.muted, old.mirror);
+                    //                    participantController.addThumb(
+                    //                            old.sid, old.identity, old.videoTrack, old.muted,
+                    // old.mirror);
                     RemoteParticipantListener listener =
                             new RemoteParticipantListener(
                                     participantController.getThumb(
@@ -1269,6 +1272,7 @@ public class RoomActivity extends BaseActivity {
     private void addParticipantThumb(ParticipantViewState participantViewState) {
         participantController.addThumb(
                 participantViewState.getSid(),
+                participantViewState.getTrackName(),
                 participantViewState.getIdentity(),
                 participantViewState.getVideoTrack(),
                 false,

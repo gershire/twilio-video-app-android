@@ -18,7 +18,6 @@ package com.twilio.video.app.ui.room;
 
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.twilio.video.VideoTrack;
 import java.util.ArrayList;
@@ -52,12 +51,13 @@ class ParticipantController {
         this.primaryView = primaryVideoView;
     }
 
-    private void addThumb(String sid, String identity) {
-        addThumb(sid, identity, null, true, false);
+    private void addThumb(String sid, String trackName, String identity) {
+        addThumb(sid, trackName, identity, null, true, false);
     }
 
-    private void addThumb(String sid, String identity, VideoTrack videoTrack) {
-        addThumb(sid, identity, videoTrack, true, false);
+    private void addThumb(
+            String sid, String trackName, String identity, @Nullable VideoTrack videoTrack) {
+        addThumb(sid, trackName, identity, videoTrack, true, false);
     }
 
     /**
@@ -65,26 +65,25 @@ class ParticipantController {
      *
      * @param sid unique participant identifier.
      * @param identity participant name to display.
+     * @param trackName name of the video track.
      * @param videoTrack participant video to display or NULL for empty thumbs.
      * @param muted participant audio state.
      */
     void addThumb(
             String sid,
             String identity,
-            @NonNull VideoTrack videoTrack,
+            String trackName,
+            @Nullable VideoTrack videoTrack,
             boolean muted,
             boolean mirror) {
 
-        if (videoTrack != null) {
-            String trackName = videoTrack.getName();
-            if (trackName != null && getThumb(sid, trackName) != null) {
-                updateThumb(sid, videoTrack, mirror);
-            } else {
-                Item item = new Item(sid, trackName, identity, videoTrack, muted, mirror);
-                ParticipantView view = createThumb(item);
-                thumbs.put(item, view);
-                thumbsViewContainer.addView(view);
-            }
+        if (getThumb(sid, trackName) != null) {
+            updateThumb(sid, trackName, videoTrack, mirror);
+        } else {
+            Item item = new Item(sid, trackName, identity, videoTrack, muted, mirror);
+            ParticipantView view = createThumb(item);
+            thumbs.put(item, view);
+            thumbsViewContainer.addView(view);
         }
     }
 
@@ -157,13 +156,14 @@ class ParticipantController {
      * Update participant video track thumb with mirroring.
      *
      * @param sid unique participant identifier.
+     * @param trackName name of the video track.
      * @param videoTrack target video track.
      * @param mirror enable/disable mirror.
      */
-    void updateThumb(String sid, VideoTrack videoTrack, boolean mirror) {
+    void updateThumb(String sid, String trackName, VideoTrack videoTrack, boolean mirror) {
         Item target = findItem(sid, videoTrack);
         if (target != null) {
-            ParticipantThumbView view = (ParticipantThumbView) getThumb(sid, videoTrack.getName());
+            ParticipantThumbView view = (ParticipantThumbView) getThumb(sid, trackName);
 
             target.mirror = mirror;
             view.setMirror(target.mirror);
@@ -237,12 +237,12 @@ class ParticipantController {
      * @param identity participant name to display.
      * @param videoTrack target video track.
      */
-    void removeOrEmptyThumb(String sid, String identity, VideoTrack videoTrack) {
+    void removeOrEmptyThumb(String sid, String trackName, String identity, VideoTrack videoTrack) {
         int thumbsCount = getThumbs(sid).size();
         if (thumbsCount > 1 || (thumbsCount == 1 && primaryItem.sid.equals(sid))) {
             removeThumb(sid, videoTrack);
         } else if (thumbsCount == 0) {
-            addThumb(sid, identity);
+            addThumb(sid, trackName, identity);
         } else {
             updateThumb(sid, videoTrack, null);
         }

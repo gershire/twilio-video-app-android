@@ -13,7 +13,7 @@ sealed class RoomEvent {
     data class RoomState(override val room: Room) : RoomEvent()
     data class ConnectFailure(override val room: Room) : RoomEvent()
     data class ParticipantConnected(override val room: Room, val remoteParticipant: RemoteParticipant) : RoomEvent()
-    data class NewRemoteVideoTrack(override val room: Room? = null, val remoteParticipant: RemoteParticipant) : RoomEvent()
+    data class NewRemoteVideoTrack(override val room: Room? = null, val remoteParticipant: RemoteParticipant, val trackName: String) : RoomEvent()
     data class ParticipantDisconnected(override val room: Room, val remoteParticipant: RemoteParticipant) : RoomEvent()
     data class DominantSpeakerChanged(override val room: Room, val remoteParticipant: RemoteParticipant?) : RoomEvent()
 }

@@ -13,7 +13,9 @@ import com.twilio.video.app.ui.room.RoomManager
 class RemoteParticipantListener(private val roomManager: RoomManager) : RemoteParticipant.Listener {
 
     override fun onVideoTrackSubscribed(remoteParticipant: RemoteParticipant, remoteVideoTrackPublication: RemoteVideoTrackPublication, remoteVideoTrack: RemoteVideoTrack) {
-        roomManager.newRemoteVideoTrack(remoteParticipant)
+        remoteParticipant.remoteVideoTracks?.firstOrNull()?.remoteVideoTrack?.let {
+            roomManager.newRemoteVideoTrack(remoteParticipant, it.name)
+        }
     }
 
     override fun onDataTrackPublished(remoteParticipant: RemoteParticipant, remoteDataTrackPublication: RemoteDataTrackPublication) {}
